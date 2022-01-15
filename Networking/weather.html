@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+        function WeatherApp() {
+            // tallennetaan sää
+            const [temperature, setTemperature] = React.useState('');
+            const [weather, setWeather] = React.useState('');
+            const [icon, setIcon] = React.useState('');
+
+            React.useEffect(() => {
+                // funktio saa getillä osoitteen
+                fetch('https://api.openweathermap.org/data/2.5/weather?q=Espoo&appid=806cfdd2b970bad1cd9dee8ac9e81712&units=metric')
+                // parsitaan json data
+                .then(response => response.json())
+                // hakee sään
+                .then(responseData => {
+                    // oliosta
+                    setTemperature(responseData.main.temp);
+                    // taulukosta
+                    setWeather(responseData.weather[0].main);
+                    setIcon('http://openweathermap.org/img/wn/' + responseData.weather[0].icon + '@2x.png');
+                })
+                .catch(err => console.error(err))
+            }, [])
+    
+            return (
+              <div>
+                <p>Temperature: {temperature} Celsius</p>
+                <p>Weather: {weather}</p>
+                <div><img src={icon}/></div>
+              </div>
+            );
+        };
+
+        ReactDOM.render(<WeatherApp />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

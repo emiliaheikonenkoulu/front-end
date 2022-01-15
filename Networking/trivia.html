@@ -1,0 +1,43 @@
+<!-- Use the Open Trivia Database API (https://opentdb.com) to show new random trivia question
+to user when the button is pressed. -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+        const RestTrivia = () => {
+            // tallennetaan kysymys
+            const [question, setQuestion] = React.useState('Paina nappia, jotta näet kysymyksen.');
+            // haetaan uusi kysymys
+            function newQuestion() {
+                // funktio saa getillä osoitteen
+                fetch('https://opentdb.com/api.php?amount=1')
+                // parsitaan json data
+                .then(response => response.json())
+                // hakee taulukosta kysymyksen
+                .then(responseData => {
+                    setQuestion(responseData.results[0].question);
+                });
+            };
+        
+            return (
+              <div><p>{question}</p>
+                <button onClick={newQuestion}>New question</button>
+              </div>
+            );
+        };
+
+        ReactDOM.render(<RestTrivia/>, document.getElementById("root"));
+    </script>
+  </body>
+</html>
