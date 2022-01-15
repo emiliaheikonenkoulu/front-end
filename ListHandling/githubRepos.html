@@ -1,0 +1,56 @@
+<!-- Github API https://api.github.com/search/repositories?q=react -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+        function Github() {
+            const [repositories, setRepositories] = React.useState([]);
+        
+            React.useEffect(() => {
+                fetch('https://api.github.com/search/repositories?q=react')
+                // parsitaan json data bodysta
+                .then(response => response.json())
+                .then(responseData => setRepositories(responseData.items))
+                .catch(err => console.error(err))
+            }, []);
+
+            return (
+                <div>
+                    <h2>Repositories</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                repositories.map(repository => 
+                                    <tr key={repository.id}>
+                                        <td>{repository.full_name}</td>
+                                        <td><a href={repository.html_url}>{repository.html_url}</a></td>
+                                    </tr>
+                                )
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            );
+        };
+ 
+        ReactDOM.render(<Github />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
